@@ -1,22 +1,21 @@
-import { Toaster } from "sonner";
-import authBg from "@/assets/images/auth-bg.jpg";
-import logo from "@/assets/images/logo-default.svg";
-import ToggleThemeDropdown from "@/components/app/dropdowns/ToggleThemeDropdown";
-import LoginForm from "./LoginForm";
+import authBg from '@/assets/images/auth-bg.jpg';
+import logo from '@/assets/images/logo-default.svg';
+import ToggleThemeDropdown from '@/components/shared/dropdowns/ToggleThemeDropdown';
+import { useThemeStore } from '@/store/useThemeStore';
+import { Toaster } from 'sonner';
+import LoginForm from '../components/LoginForm';
 
 const LoginPage = () => {
+  const theme = useThemeStore((state) => state.theme);
+
   return (
     <>
-      <Toaster position="top-right" theme="dark" richColors duration={2500} />
+      <Toaster position="top-right" theme={theme} richColors duration={2500} />
       <div className="grid min-h-screen w-full md:grid-cols-12">
         <div className="h-0 md:col-span-6 md:h-full lg:col-span-7">
           <div className="relative flex h-full items-center justify-center">
             <div className="absolute inset-0 bg-gradient-to-tr from-indigo-900 to-blue-900 opacity-50"></div>
-            <img
-              src={authBg}
-              alt="auth-bg"
-              className="h-full w-full object-cover"
-            />
+            <img src={authBg} alt="auth-bg" className="h-full w-full object-cover" />
           </div>
         </div>
         <div className="min-h-screen flex flex-col md:col-span-6 lg:col-span-5 relative">

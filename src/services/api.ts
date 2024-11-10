@@ -21,7 +21,7 @@ apiService.interceptors.request.use(
   },
   (error) => {
     return Promise.reject(error);
-  },
+  }
 );
 
 // Intercept response to format errors and handle unauthorized responses
@@ -30,14 +30,20 @@ apiService.interceptors.response.use(
     return response;
   },
   (error: AxiosError): Promise<FormattedApiError> => {
+    // Check if error is a cancel error and ignore it
+    if (axios.isCancel(error)) {
+      console.log(error.message);
+      return new Promise(() => {}); // Return a pending promise to avoid triggering catch blocks
+    }
+
     let formattedError: FormattedApiError = {
       error: true,
       message: 'An unexpected error occurred',
       errors: [],
     };
 
-    if (error.response) {
-      const { data, status } = error.response as AxiosResponse;
+    if ((error as AxiosError).response) {
+      const { data, status } = (error as AxiosError).response as AxiosResponse;
 
       formattedError = {
         error: true,
@@ -53,7 +59,7 @@ apiService.interceptors.response.use(
     }
 
     return Promise.reject(formattedError);
-  },
+  }
 );
 
 export default apiService;

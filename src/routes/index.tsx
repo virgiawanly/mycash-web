@@ -1,25 +1,32 @@
-import LoginPage from "@/pages/auth/LoginPage";
-import DashboardPage from "@/pages/dashboard/DashboardPage";
-import { createBrowserRouter, Navigate } from "react-router-dom";
-import ApplicationLayout from "../layouts/ApplicationLayout/ApplicationLayout";
-import AuthenticatedRoute from "./AuthenticatedRoute";
-import UnauthenticatedRoute from "./UnauthenticatedRoute";
+import { loginRoutes } from '@/features/auth/login';
+import { businessEntitiesRoutes } from '@/features/business-entities';
+import { dashboardRoutes } from '@/features/dashboard';
+import { createBrowserRouter, Navigate, Outlet } from 'react-router-dom';
+import ApplicationLayout from '../layouts/ApplicationLayout';
+import AuthenticatedRoute from './AuthenticatedRoute';
+import UnauthenticatedRoute from './UnauthenticatedRoute';
 
 const router = createBrowserRouter([
   {
-    path: "/auth",
-    element: <Navigate to="/auth/login" replace />,
+    path: '/auth',
+    children: [
+      {
+        path: '',
+        element: <Navigate to="/auth/login" replace />,
+      },
+      {
+        path: 'login',
+        element: (
+          <UnauthenticatedRoute>
+            <Outlet />
+          </UnauthenticatedRoute>
+        ),
+        children: loginRoutes,
+      },
+    ],
   },
   {
-    path: "/auth/login",
-    element: (
-      <UnauthenticatedRoute>
-        <LoginPage />
-      </UnauthenticatedRoute>
-    ),
-  },
-  {
-    path: "/",
+    path: '/',
     element: (
       <AuthenticatedRoute>
         <ApplicationLayout />
@@ -27,17 +34,22 @@ const router = createBrowserRouter([
     ),
     children: [
       {
-        path: "",
-        element: <Navigate to="/dashboard" replace />,
+        path: '',
+        children: dashboardRoutes,
       },
       {
-        path: "dashboard",
-        element: <DashboardPage />,
+        path: 'settings',
+        children: [
+          {
+            path: 'business-entities',
+            children: businessEntitiesRoutes,
+          },
+        ],
       },
     ],
   },
   {
-    path: "*",
+    path: '*',
     element: <Navigate to="/" replace />,
   },
 ]);
