@@ -62,7 +62,7 @@ const EditBusinessEntityDialog = (props: EditBusinessEntityDialogProps) => {
               </div>
               <DialogFooter>
                 <DialogClose asChild>
-                  <Button type="button" variant="outline">
+                  <Button type="button" variant="secondary">
                     Cancel
                   </Button>
                 </DialogClose>
@@ -95,7 +95,7 @@ const EditBusinessEntityDialog = (props: EditBusinessEntityDialogProps) => {
                 Save
               </Button>
               <DrawerClose asChild>
-                <Button type="button" variant="outline">
+                <Button type="button" variant="secondary">
                   Cancel
                 </Button>
               </DrawerClose>

@@ -50,7 +50,7 @@ const CreateBusinessEntityDialog = (props: CreateBusinessEntityDialogProps) => {
               </div>
               <DialogFooter>
                 <DialogClose asChild>
-                  <Button variant="outline">Cancel</Button>
+                  <Button variant="secondary">Cancel</Button>
                 </DialogClose>
                 <Button type="submit" onClick={createBusinessEntityForm.handleSubmit(handleSubmit)} disabled={createBusinessEntityForm.formState.isSubmitting}>
                   {createBusinessEntityForm.formState.isSubmitting && <Loader2 className="animate-spin" />}
@@ -81,7 +81,7 @@ const CreateBusinessEntityDialog = (props: CreateBusinessEntityDialogProps) => {
                 Save
               </Button>
               <DrawerClose asChild>
-                <Button type="button" variant="outline">
+                <Button type="button" variant="secondary">
                   Cancel
                 </Button>
               </DrawerClose>

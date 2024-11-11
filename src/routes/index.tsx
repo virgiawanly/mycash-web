@@ -2,7 +2,7 @@ import { loginRoutes } from '@/features/auth/login';
 import { businessEntitiesRoutes } from '@/features/business-entities';
 import { dashboardRoutes } from '@/features/dashboard';
 import { createBrowserRouter, Navigate, Outlet } from 'react-router-dom';
-import ApplicationLayout from '../layouts/ApplicationLayout';
+import ApplicationLayout from '../components/layouts/ApplicationLayout';
 import AuthenticatedRoute from './AuthenticatedRoute';
 import UnauthenticatedRoute from './UnauthenticatedRoute';
 

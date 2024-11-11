@@ -1,28 +1,16 @@
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { ColumnDef, flexRender, getCoreRowModel, SortingState, useReactTable } from '@tanstack/react-table';
+import { TableBody, TableCell, TableHead, TableHeader, TableRow, Table as TableUI } from '@/components/ui/table';
+import { flexRender, Table } from '@tanstack/react-table';
 
-interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
-  data: TData[];
-  sorting?: SortingState;
-  onSortingChange?: any;
+interface DataTableProps<TData> {
+  table: Table<TData>;
 }
 
-export function DataTable<TData, TValue>({ columns, data, sorting, onSortingChange }: DataTableProps<TData, TValue>) {
-  const table = useReactTable({
-    data,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-    manualSorting: true, // Enable manual sorting to defer to onSortingChange
-    onSortingChange: onSortingChange,
-    state: {
-      sorting,
-    },
-  });
+export function DataTable<TData>(props: DataTableProps<TData>) {
+  const { table } = props;
 
   return (
     <div className="rounded-md border">
-      <Table>
+      <TableUI>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
@@ -33,7 +21,7 @@ export function DataTable<TData, TValue>({ columns, data, sorting, onSortingChan
           ))}
         </TableHeader>
         <TableBody>
-          {data.length ? (
+          {table.getRowCount() > 0 ? (
             table.getRowModel().rows.map((row) => (
               <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
                 {row.getVisibleCells().map((cell) => (
@@ -45,13 +33,13 @@ export function DataTable<TData, TValue>({ columns, data, sorting, onSortingChan
             ))
           ) : (
             <TableRow>
-              <TableCell colSpan={columns.length} className="h-24 text-center">
+              <TableCell colSpan={table.getAllColumns().length} className="h-24 text-center">
                 No results.
               </TableCell>
             </TableRow>
           )}
         </TableBody>
-      </Table>
+      </TableUI>
     </div>
   );
 }
