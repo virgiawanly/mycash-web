@@ -3,7 +3,7 @@ import apiConfig from '../config/api';
 import { useAuthStore } from '../store/useAuthStore';
 import { FormattedApiError } from '../types/errors';
 
-const apiService = axios.create({
+const httpClient = axios.create({
   baseURL: apiConfig.apiUrl,
   headers: {
     'Content-Type': 'application/json',
@@ -11,7 +11,7 @@ const apiService = axios.create({
 });
 
 // Intercept request to add the auth token
-apiService.interceptors.request.use(
+httpClient.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem(apiConfig.apiTokenIdentifier);
     if (token) {
@@ -25,7 +25,7 @@ apiService.interceptors.request.use(
 );
 
 // Intercept response to format errors and handle unauthorized responses
-apiService.interceptors.response.use(
+httpClient.interceptors.response.use(
   (response: AxiosResponse): AxiosResponse => {
     return response;
   },
@@ -61,4 +61,4 @@ apiService.interceptors.response.use(
   },
 );
 
-export default apiService;
+export default httpClient;

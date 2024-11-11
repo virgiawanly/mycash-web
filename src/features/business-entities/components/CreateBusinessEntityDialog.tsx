@@ -3,7 +3,7 @@ import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, Di
 import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Form } from '@/components/ui/form';
 import useMediaQuery from '@/hooks/use-media-query';
-import apiService from '@/services/api';
+import httpClient from '@/lib/http';
 import { FormattedApiError } from '@/types/errors';
 import { Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
@@ -22,7 +22,7 @@ const CreateBusinessEntityDialog = (props: CreateBusinessEntityDialogProps) => {
   const createBusinessEntityForm = useBusinessEntityForm();
 
   const handleSubmit = async (formData: any) => {
-    await apiService
+    await httpClient
       .post('/web-app/business-entities', formData)
       .then((res) => {
         toast.success(res.data.message);

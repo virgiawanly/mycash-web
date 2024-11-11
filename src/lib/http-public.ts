@@ -2,7 +2,7 @@ import axios, { AxiosError, AxiosResponse } from 'axios';
 import apiConfig from '../config/api';
 import { FormattedApiError } from '../types/errors';
 
-const noAuthApiService = axios.create({
+const publicHttpClient = axios.create({
   baseURL: apiConfig.apiUrl,
   headers: {
     'Content-Type': 'application/json',
@@ -10,7 +10,7 @@ const noAuthApiService = axios.create({
 });
 
 // Intercept response to format the errors
-noAuthApiService.interceptors.response.use(
+publicHttpClient.interceptors.response.use(
   (response: AxiosResponse): AxiosResponse => {
     return response;
   },
@@ -36,4 +36,4 @@ noAuthApiService.interceptors.response.use(
   },
 );
 
-export default noAuthApiService;
+export default publicHttpClient;

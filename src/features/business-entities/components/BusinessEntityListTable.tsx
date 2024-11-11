@@ -3,7 +3,7 @@ import { DataTable } from '@/components/shared/table/DataTable';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import useDebounce from '@/hooks/use-debounce';
-import apiService from '@/services/api';
+import httpClient from '@/lib/http';
 import { BusinessEntity } from '@/types/business-entities';
 import { FormattedApiError } from '@/types/errors';
 import { Pagination } from '@/types/pagination';
@@ -38,7 +38,7 @@ const BusinessEntityListTable = (props: BusinessEntityListTable) => {
     const sortBy = businessEntitiesSort.length ? businessEntitiesSort[0].id : '';
     const sortOrder = businessEntitiesSort.length ? (businessEntitiesSort[0].desc ? 'desc' : 'asc') : '';
 
-    apiService
+    httpClient
       .get('/web-app/business-entities', {
         signal: controller.signal,
         params: {
