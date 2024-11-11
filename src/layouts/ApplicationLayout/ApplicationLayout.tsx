@@ -11,14 +11,10 @@ export default function ApplicationLayout() {
         <ApplicationLayoutSidebar />
         <SidebarInset>
           <ApplicationLayoutNavbar />
-          <div className="bg-gray-50 dark:bg-background min-h-screen w-full">
-            <div className="w-full max-w-screen-2xl mx-auto p-5">
-              <Outlet />
-            </div>
-          </div>
+          <Outlet />
         </SidebarInset>
       </SidebarProvider>
-      <Toaster />
+      <Toaster richColors position="top-right" />
     </>
   );
 }

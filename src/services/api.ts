@@ -21,7 +21,7 @@ apiService.interceptors.request.use(
   },
   (error) => {
     return Promise.reject(error);
-  }
+  },
 );
 
 // Intercept response to format errors and handle unauthorized responses
@@ -32,7 +32,6 @@ apiService.interceptors.response.use(
   (error: AxiosError): Promise<FormattedApiError> => {
     // Check if error is a cancel error and ignore it
     if (axios.isCancel(error)) {
-      console.log(error.message);
       return new Promise(() => {}); // Return a pending promise to avoid triggering catch blocks
     }
 
@@ -59,7 +58,7 @@ apiService.interceptors.response.use(
     }
 
     return Promise.reject(formattedError);
-  }
+  },
 );
 
 export default apiService;
