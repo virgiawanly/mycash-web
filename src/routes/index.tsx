@@ -1,5 +1,6 @@
 import { loginRoutes } from '@/features/auth/login';
 import { businessEntitiesRoutes } from '@/features/business-entities';
+import { businessLocationsRoutes } from '@/features/business-locations';
 import { dashboardRoutes } from '@/features/dashboard';
 import { createBrowserRouter, Navigate, Outlet } from 'react-router-dom';
 import ApplicationLayout from '../components/layouts/ApplicationLayout';
@@ -33,24 +34,23 @@ const router = createBrowserRouter([
       </AuthenticatedRoute>
     ),
     children: [
-      {
-        path: '',
-        children: dashboardRoutes,
-      },
+      { path: 'dashboard', children: dashboardRoutes },
       {
         path: 'settings',
         children: [
-          {
-            path: 'business-entities',
-            children: businessEntitiesRoutes,
-          },
+          { path: 'business-entities', children: businessEntitiesRoutes },
+          { path: 'business-locations', children: businessLocationsRoutes },
         ],
+      },
+      {
+        path: '*',
+        element: <Navigate to="/dashboard" replace />,
       },
     ],
   },
   {
     path: '*',
-    element: <Navigate to="/" replace />,
+    element: <Navigate to="/dashboard" replace />,
   },
 ]);
 

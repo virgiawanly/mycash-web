@@ -7,13 +7,13 @@ import { Loader2 } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
-export interface DeleteBusinessEntityDialogProps {
+export interface DeleteBusinessLocationDialogProps {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
   selectedIds: number[] | string[];
 }
 
-const DeleteBusinessEntityDialog = (props: DeleteBusinessEntityDialogProps) => {
+const DeleteBusinessLocationDialog = (props: DeleteBusinessLocationDialogProps) => {
   const { isOpen, setIsOpen, selectedIds } = props;
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -24,10 +24,10 @@ const DeleteBusinessEntityDialog = (props: DeleteBusinessEntityDialogProps) => {
 
     setIsSubmitting(true);
     httpClient
-      .post('web-app/business-entities/batch-delete', { ids: selectedIds }, { params: { _method: 'DELETE' } })
+      .post('web-app/business-locations/batch-delete', { ids: selectedIds }, { params: { _method: 'DELETE' } })
       .then((res) => {
         toast.success(res.data.message);
-        window.dispatchEvent(new CustomEvent('business-entity-deleted'));
+        window.dispatchEvent(new CustomEvent('business-location-deleted'));
         setIsOpen(false);
       })
       .catch((err: FormattedApiError) => {
@@ -61,4 +61,4 @@ const DeleteBusinessEntityDialog = (props: DeleteBusinessEntityDialogProps) => {
   );
 };
 
-export default DeleteBusinessEntityDialog;
+export default DeleteBusinessLocationDialog;
