@@ -1,21 +1,9 @@
-import {
-  ChevronRight,
-  Folder,
-  Forward,
-  MoreHorizontal,
-  Trash2,
-  type LucideIcon,
-} from "lucide-react";
-import * as React from "react";
+import { ChevronRight, Folder, Forward, MoreHorizontal, Trash2, type LucideIcon } from 'lucide-react';
 
-import { NavUser } from "@/components/nav-user";
-import { TeamSwitcher } from "@/components/team-switcher";
+import { NavUser } from '@/components/nav-user';
+import { TeamSwitcher } from '@/components/team-switcher';
 
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 
 import {
   Sidebar,
@@ -33,18 +21,13 @@ import {
   SidebarMenuSubItem,
   SidebarRail,
   useSidebar,
-} from "@/components/ui/sidebar";
+} from '@/components/ui/sidebar';
 
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 
-import { menu } from "@/config/sidebar-menu";
-import { Link } from "react-router-dom";
+import { menu } from '@/config/sidebar-menu';
+import { useCallback, useEffect, useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 
 interface NavMainProps {
   items: {
@@ -61,6 +44,25 @@ interface NavMainProps {
 
 export function NavMain(props: NavMainProps) {
   const { items } = props;
+  const location = useLocation();
+
+  const isSidebarItemActive = useCallback(
+    (item: (typeof items)[number]) => {
+      if (item.items?.length) {
+        return item.items.some((subItem) => location.pathname.includes(subItem.url));
+      }
+
+      return location.pathname.includes(item.url);
+    },
+    [location],
+  );
+
+  const isSidebarSubItemActive = useCallback(
+    (item: { title: string; url: string }) => {
+      return location.pathname.includes(item.url);
+    },
+    [location],
+  );
 
   return (
     <SidebarGroup>
@@ -69,12 +71,7 @@ export function NavMain(props: NavMainProps) {
         {items.map((item) => {
           if (item.items?.length) {
             return (
-              <Collapsible
-                key={item.title}
-                asChild
-                defaultOpen={item.isActive}
-                className="group/collapsible"
-              >
+              <Collapsible key={item.title} asChild defaultOpen={isSidebarItemActive(item)} className="group/collapsible">
                 <SidebarMenuItem>
                   <CollapsibleTrigger asChild>
                     <SidebarMenuButton tooltip={item.title}>
@@ -87,7 +84,7 @@ export function NavMain(props: NavMainProps) {
                     <SidebarMenuSub>
                       {item.items?.map((subItem) => (
                         <SidebarMenuSubItem key={subItem.title}>
-                          <SidebarMenuSubButton asChild>
+                          <SidebarMenuSubButton asChild isActive={isSidebarSubItemActive(subItem)}>
                             <Link to={subItem.url}>
                               <span>{subItem.title}</span>
                             </Link>
@@ -103,7 +100,7 @@ export function NavMain(props: NavMainProps) {
 
           return (
             <SidebarMenuItem key={item.title}>
-              <SidebarMenuButton asChild>
+              <SidebarMenuButton asChild isActive={isSidebarItemActive(item)}>
                 <a href={item.url}>
                   {item.icon && <item.icon />}
                   <span>{item.title}</span>
@@ -148,11 +145,7 @@ export function NavProjects(props: NavProjectsProps) {
                   <span className="sr-only">More</span>
                 </SidebarMenuAction>
               </DropdownMenuTrigger>
-              <DropdownMenuContent
-                className="w-48 rounded-lg"
-                side={isMobile ? "bottom" : "right"}
-                align={isMobile ? "end" : "start"}
-              >
+              <DropdownMenuContent className="w-48 rounded-lg" side={isMobile ? 'bottom' : 'right'} align={isMobile ? 'end' : 'start'}>
                 <DropdownMenuItem>
                   <Folder className="text-muted-foreground" />
                   <span>View Project</span>
@@ -181,9 +174,7 @@ export function NavProjects(props: NavProjectsProps) {
   );
 }
 
-export function ApplicationLayoutSidebar({
-  ...props
-}: React.ComponentProps<typeof Sidebar>) {
+export function ApplicationLayoutSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>

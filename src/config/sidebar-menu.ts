@@ -43,7 +43,7 @@ export const menu = {
   navMain: [
     {
       title: 'Dashboard',
-      url: '/',
+      url: '/dashboard',
       icon: Monitor,
     },
     {

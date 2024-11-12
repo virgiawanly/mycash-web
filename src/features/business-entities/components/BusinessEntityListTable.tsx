@@ -9,7 +9,7 @@ import { BusinessEntity } from '@/types/business-entities';
 import { FormattedApiError } from '@/types/errors';
 import { Pagination } from '@/types/pagination';
 import { getCoreRowModel, SortingState, useReactTable } from '@tanstack/react-table';
-import { Search, Trash } from 'lucide-react';
+import { Search } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import useBusinessEntityColumns from './columns';
@@ -22,7 +22,9 @@ export interface BusinessEntityListTable {
 const BusinessEntityListTable = (props: BusinessEntityListTable) => {
   const { onRowClick } = props;
 
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isBatchDeleteDialogOpen, setIsBatchDeleteDialogOpen] = useState(false);
+  const [isSingleDeleteDialogOpen, setIsSingleDeleteDialogOpen] = useState(false);
+  const [businessEntityToDelete, setBusinessEntityToDelete] = useState<BusinessEntity | null>(null);
   const [businessEntities, setBusinessEntities] = useState<BusinessEntity[]>([]);
   const [businessEntitiesSearch, setBusinessEntitiesSearch] = useState<string>('');
   const [businessEntitiesSorting, setBusinessEntitiesSorting] = useState<SortingState>([]);
@@ -35,6 +37,7 @@ const BusinessEntityListTable = (props: BusinessEntityListTable) => {
   const debouncedSearch = useDebounce(businessEntitiesSearch, 300);
   const columns = useBusinessEntityColumns({
     onRowClick: (entity: BusinessEntity) => onRowClick && onRowClick(entity),
+    onRowDelete: (entity: BusinessEntity) => handleSingleDelete(entity),
   });
 
   const table = useReactTable({
@@ -80,7 +83,12 @@ const BusinessEntityListTable = (props: BusinessEntityListTable) => {
 
   const handleBatchDelete = () => {
     const isOpen = table.getIsSomePageRowsSelected() || table.getIsAllPageRowsSelected();
-    setIsDeleteDialogOpen(isOpen);
+    setIsBatchDeleteDialogOpen(isOpen);
+  };
+
+  const handleSingleDelete = (entity: BusinessEntity) => {
+    setBusinessEntityToDelete(entity);
+    setIsSingleDeleteDialogOpen(!!entity);
   };
 
   const refreshEntities = useCallback(() => {
@@ -118,19 +126,8 @@ const BusinessEntityListTable = (props: BusinessEntityListTable) => {
       <Card>
         <CardContent className="p-6">
           <div className="grid w-full gap-4">
-            <div className="flex w-full items-center justify-between">
-              <div className="flex-1">
-                {(table.getIsSomePageRowsSelected() || table.getIsAllPageRowsSelected()) && (
-                  <div className="flex items-center gap-2">
-                    <Button variant="destructive" size="sm" className="text-xs" onClick={handleBatchDelete}>
-                      <Trash className="size-3" absoluteStrokeWidth />
-                      <span>Delete</span>
-                    </Button>
-                    <span className="text-sm text-muted-foreground">{table.getSelectedRowModel().rows.length} row(s) selected</span>
-                  </div>
-                )}
-              </div>
-              <div className="relative">
+            <div className="justify-betwen flex w-full items-center">
+              <div className="relative flex-1">
                 <Search className="absolute left-3 top-1/2 size-3 -translate-y-1/2 text-muted-foreground" absoluteStrokeWidth />
                 <Input
                   type="search"
@@ -141,6 +138,15 @@ const BusinessEntityListTable = (props: BusinessEntityListTable) => {
                 />
               </div>
             </div>
+
+            {(table.getIsSomePageRowsSelected() || table.getIsAllPageRowsSelected()) && (
+              <div className="flex items-center gap-3">
+                <Button variant="destructive" size="sm" onClick={handleBatchDelete}>
+                  <span>Delete</span>
+                </Button>
+                <p className="text-sm text-muted-foreground">{table.getSelectedRowModel().rows.length} row(s) selected</p>
+              </div>
+            )}
 
             {/* Main Table */}
             <DataTable table={table} />
@@ -159,8 +165,19 @@ const BusinessEntityListTable = (props: BusinessEntityListTable) => {
         </CardContent>
       </Card>
 
-      {/* Delete Dialog */}
-      <DeleteBusinessEntityDialog isOpen={isDeleteDialogOpen} setIsOpen={setIsDeleteDialogOpen} selectedRows={table.getSelectedRowModel().rows} />
+      {/* Batch Delete Dialog */}
+      <DeleteBusinessEntityDialog
+        isOpen={isBatchDeleteDialogOpen}
+        setIsOpen={setIsBatchDeleteDialogOpen}
+        selectedIds={table.getSelectedRowModel().rows.map((row) => row.original.id)}
+      />
+
+      {/* Single Delete Dialog */}
+      <DeleteBusinessEntityDialog
+        isOpen={isSingleDeleteDialogOpen}
+        setIsOpen={setIsSingleDeleteDialogOpen}
+        selectedIds={businessEntityToDelete ? [businessEntityToDelete.id] : []}
+      />
     </>
   );
 };
